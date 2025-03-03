@@ -3,7 +3,7 @@ This library allows you to manage web pages using Python.
 
 # Overview
 - \_\_init__
-  - None
+  - WebpageManager from Webpage.py
 
   
 - Webpage

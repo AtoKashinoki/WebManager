@@ -5,7 +5,7 @@ build-backend = 'setuptools.build_meta'
 
 [project]
 name = 'WebManager'
-version = '0.1.0'
+version = '1.1.0'
 description = 'This library allows you to manage web pages using Python.'
 
 readme = 'README.md'
