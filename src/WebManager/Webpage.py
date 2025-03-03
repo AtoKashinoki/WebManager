@@ -9,7 +9,7 @@ This file contains the Webpage-relate processes used for manage webpages.
 
 
 import os
-from CodingTools.os import mkdir, rmtree, mk_rote
+from CodingTools.os import mkdir, rmtree, mk_rote, path_replace_os_sep
 
 from typing import Any, Callable
 
@@ -137,14 +137,11 @@ def add_webpage(
     Add page source in web datas.
     :return: True if the file was created.
     """
-    _file_path_in_web_dir =\
-        _file_path_in_web_dir.replace("/", "\\")
+    _file_path_in_web_dir = path_replace_os_sep(_file_path_in_web_dir)
 
-    mk_rote(_web_dir_path, os.path.split(_file_path_in_web_dir)[:-1])
+    mk_rote(_web_dir_path, _file_path_in_web_dir.split(os.sep)[:-1])
 
     page_path = os.path.join(_web_dir_path, _file_path_in_web_dir)
-
-    print(page_path)
 
     if os.path.isfile(page_path):
         if not caveat_process({"path": page_path}):
