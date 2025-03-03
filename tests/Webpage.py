@@ -15,7 +15,7 @@ test_html2 = """
 
 
 if __name__ == '__main__':
-    webpage = WebpageManager()
+    webpage = WebpageManager(caveat=False)
     webpage.add_page("index", test_html1)
     webpage.add_page("test/test/test2", test_html2)
     webpage.run()

@@ -9,7 +9,7 @@ This file contains the Webpage-relate processes used for manage webpages.
 
 
 import os
-from CodingTools.os import mkdir, rmtree, mk_rote, path_replace_os_sep
+from CodingTools.os import mkdir, rmtree, mk_root, path_replace_os_sep
 
 from typing import Any, Callable
 
@@ -47,13 +47,15 @@ WEB_META: str = "webpage meta"
 
 
 def get_webpage_meta(
-        _meta_path: str
+        _meta_path: str,
+        caveat: bool = True,
 ) -> dict[str, Any]:
     """
     Return webpage meta.
     :return: Webpage meta data.
     """
-    create_webpage_meta(_meta_path)
+    if caveat: create_webpage_meta(_meta_path)
+    else: create_webpage_meta(_meta_path, lambda *_: True)
     webpage_meta = read_webpage_meta(_meta_path)
     return webpage_meta
 
@@ -61,6 +63,7 @@ def get_webpage_meta(
 def gen_webpage_directory(
         _dist_path: str,
         _webpage_meta: dict[str, Any],
+        caveat: bool = True,
 ) -> str:
     """
         Generate webpage directory.
@@ -82,7 +85,8 @@ def gen_webpage_directory(
 
     webpage_data_path = os.path.join(_dist_path, webpage_name)
     if webpage_rmtree_conf:
-        rmtree(webpage_data_path)
+        if caveat: rmtree(webpage_data_path)
+        else: rmtree(webpage_data_path, caveat_process=lambda *_: True)
     mkdir(webpage_data_path)
 
     return webpage_data_path
@@ -91,6 +95,7 @@ def gen_webpage_directory(
 def recognition_web_datas(
         _path: str,
         use_meta_file: bool = True,
+        caveat: bool = True,
 ) -> dict[str, str]:
     """"""
 
@@ -102,7 +107,7 @@ def recognition_web_datas(
 
     webpage_meta: dict[str: Any] = None
     if use_meta_file:
-        webpage_meta = get_webpage_meta(webpage_meta_path)
+        webpage_meta = get_webpage_meta(webpage_meta_path, caveat)
         ...
 
     if webpage_meta is None:
@@ -111,7 +116,7 @@ def recognition_web_datas(
 
     """ gen webpage data file """
     webpage_data_path =\
-        gen_webpage_directory(_path, webpage_meta)
+        gen_webpage_directory(_path, webpage_meta, caveat=caveat)
 
     """ gen path dict """
     path_dict: dict[str, str] = {
@@ -139,7 +144,7 @@ def add_webpage(
     """
     _file_path_in_web_dir = path_replace_os_sep(_file_path_in_web_dir)
 
-    mk_rote(_web_dir_path, _file_path_in_web_dir.split(os.sep)[:-1])
+    mk_root(_web_dir_path, _file_path_in_web_dir.split(os.sep)[:-1])
 
     page_path = os.path.join(_web_dir_path, _file_path_in_web_dir)
 
@@ -210,8 +215,12 @@ class WebpageManager:
             self,
             app: Flask = Flask(__name__),
             webpage_dist_path: str = os.path.join(".", "dist"),
+            caveat: bool = True,
     ) -> None:
         """ Initialize self settings """
+
+        """ options """
+        self.__caveat = caveat
 
         """ flask """
         self.__app = app
@@ -220,11 +229,16 @@ class WebpageManager:
         """ recognition webpage data """
         self.__dist_path = webpage_dist_path
 
-        path_dict = recognition_web_datas(self.dist_path)
+        path_dict = recognition_web_datas(
+            self.dist_path, caveat=self.__caveat
+        )
         self.__meta_path = path_dict[WEB_META]
         self.__data_path = path_dict[WEB_DATA]
 
         return
+
+    """ options """
+    __caveat: bool = True
 
     """ flask """
     __app: Flask
@@ -331,7 +345,8 @@ class WebpageManager:
             self,
             _path_in_web_dir: str,
             _page_source: str,
-            caveat_process: Callable[[dict[str, str]], bool] = caveat_exist,
+            caveat_process: Callable[[dict[str, str]], bool] =\
+                    caveat_exist if __caveat else lambda *_: True,
     ) -> bool:
         """
         Add page source in web datas.
