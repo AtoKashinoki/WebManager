@@ -4,16 +4,16 @@ build-backend = 'setuptools.build_meta'
 
 
 [project]
-name = 'ShareOnWeb'
-version = '0.0.0'
-description = 'This allows you to share documents via a webpage.'
+name = 'WebManager'
+version = '0.1.0'
+description = 'This library allows you to manage web pages using Python.'
 
 readme = 'README.md'
 license = {file='LICENSE'}
 
 requires-python = '>=3.7'
 dependencies = [
-   'CodingTools@git+https://github.com/AtoKashinoki/CodingTools.git@v3.3.3',
+   'CodingTools@git+https://github.com/AtoKashinoki/CodingTools.git@CodingTools3',
    'flask',
 ]
 
