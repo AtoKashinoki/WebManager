@@ -1,6 +1,6 @@
 
 
-from ShareOnWeb.Webpage import WebpageManager
+from WebManager.Webpage import WebpageManager
 
 
 test_html1 = """
