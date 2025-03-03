@@ -1,2 +1,2 @@
-# ShareOnWeb
-This allows you to share documents via a webpage.
+# WebManager
+This library allows you to manage web pages using Python.
