@@ -317,6 +317,8 @@ class WebpageManager:
         web_datas: dict[str, str | dict] =\
             read_dir(self.__data_path)
 
+        web_datas = dict(sorted(web_datas.items(), key=lambda item: item[0]))
+
         self.__flask_create_pages(web_datas, self.__top_page)
 
         self.__app.run(
